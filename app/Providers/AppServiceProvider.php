@@ -10,6 +10,12 @@ use App\Models\Sewa;
 use App\Observers\DetailPenyewaanObserver;
 use App\Observers\SewaObserver;
 
+use App\Models\Pembayaran;
+use App\Observers\PembayaranObserver;
+
+use App\Models\Post;
+use App\Observers\PostObserver;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -28,5 +34,9 @@ class AppServiceProvider extends ServiceProvider
         DetailPenyewaan::observe(DetailPenyewaanObserver::class);
 
         Sewa::observe(SewaObserver::class);
+
+        Pembayaran::observe(PembayaranObserver::class);
+
+        Post::observe(PostObserver::class);
     }
 }

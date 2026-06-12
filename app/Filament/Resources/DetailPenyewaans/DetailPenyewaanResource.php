@@ -18,7 +18,10 @@ class DetailPenyewaanResource extends Resource
 {
     protected static ?string $model = DetailPenyewaan::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 
     protected static ?string $recordTitleAttribute = 'id';
 

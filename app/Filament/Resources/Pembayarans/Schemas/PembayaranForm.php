@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\Pembayarans\Schemas;
 
+use App\Models\Sewa;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 
 class PembayaranForm
@@ -21,6 +24,35 @@ class PembayaranForm
                     ->relationship('sewa', 'kode_sewa')
                     ->searchable()
                     ->preload()
+                    ->live()
+                    ->afterStateUpdated(function (
+                        Get $get,
+                        Set $set,
+                        $state
+                    ) {
+
+                        $sewa = Sewa::find($state);
+
+                        if (! $sewa) {
+                            return;
+                        }
+
+                        if ($get('jenis') === 'sewa') {
+
+                            $set(
+                                'jumlah',
+                                $sewa->total_harga + $sewa->total_deposit
+                            );
+                        }
+
+                        if ($get('jenis') === 'denda') {
+
+                            $set(
+                                'jumlah',
+                                $sewa->denda
+                            );
+                        }
+                    })
                     ->required(),
 
                 TextInput::make('kode_pembayaran')
@@ -35,6 +67,37 @@ class PembayaranForm
                         'sewa' => 'Sewa',
                         'denda' => 'Denda',
                     ])
+                    ->live()
+                    ->afterStateUpdated(function (
+                        Get $get,
+                        Set $set,
+                        $state
+                    ) {
+
+                        $sewa = Sewa::find(
+                            $get('sewa_id')
+                        );
+
+                        if (! $sewa) {
+                            return;
+                        }
+
+                        if ($state === 'sewa') {
+
+                            $set(
+                                'jumlah',
+                                $sewa->total_harga + $sewa->total_deposit
+                            );
+                        }
+
+                        if ($state === 'denda') {
+
+                            $set(
+                                'jumlah',
+                                $sewa->denda
+                            );
+                        }
+                    })
                     ->required(),
 
                 Select::make('metode')
@@ -51,6 +114,7 @@ class PembayaranForm
                     ->label('Jumlah Pembayaran')
                     ->numeric()
                     ->prefix('Rp')
+                    ->readOnly()
                     ->required(),
 
                 Select::make('status')
@@ -75,6 +139,7 @@ class PembayaranForm
 
                 DateTimePicker::make('dibayar_pada')
                     ->label('Tanggal Pembayaran')
+                    ->default(now())
                     ->required(),
             ]);
     }

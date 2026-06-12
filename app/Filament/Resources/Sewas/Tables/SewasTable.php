@@ -50,6 +50,24 @@ class SewasTable
                         'danger' => 'dibatalkan',
                     ]),
 
+                TextColumn::make('barang_disewa')
+                    ->label('Barang Disewa')
+                    ->getStateUsing(function ($record) {
+                        return $record->detailPenyewaan
+                            ->map(
+                                fn($item) =>
+                                $item->produk->nama . ' (' . $item->jumlah . 'x)'
+                            )
+                            ->implode(', ');
+                    })
+                    ->wrap()
+                    ->limit(80),
+
+                TextColumn::make('detailPenyewaan_count')
+                    ->counts('detailPenyewaan')
+                    ->label('Jumlah Item')
+                    ->badge(),  
+
                 TextColumn::make('total_harga')
                     ->label('Total Harga')
                     ->money('IDR')

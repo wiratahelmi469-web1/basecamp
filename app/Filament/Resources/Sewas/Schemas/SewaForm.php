@@ -17,8 +17,8 @@ class SewaForm
 
                 TextInput::make('kode_sewa')
                     ->label('Kode Sewa')
-                    ->required()
-                    ->maxLength(30),
+                    ->disabled()
+                    ->dehydrated(false),
 
                 Select::make('user_id')
                     ->label('Pelanggan')
@@ -54,14 +54,14 @@ class SewaForm
                     ->required(),
 
                 TextInput::make('total_harga')
-                    ->numeric()
-                    ->prefix('Rp')
-                    ->required(),
+                    ->default(0)
+                    ->dehydrated(false)
+                    ->readOnly(),
 
                 TextInput::make('total_deposit')
-                    ->numeric()
-                    ->prefix('Rp')
-                    ->required(),
+                    ->default(0)
+                    ->dehydrated(false)
+                    ->readOnly(),
 
                 TextInput::make('denda')
                     ->numeric()

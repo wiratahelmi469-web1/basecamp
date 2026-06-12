@@ -9,6 +9,8 @@ class Pembayaran extends Model
 {
     protected $table = 'pembayaran';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'sewa_id',
         'kode_pembayaran',
@@ -29,4 +31,4 @@ class Pembayaran extends Model
     {
         return $this->belongsTo(Sewa::class, 'sewa_id');
     }
-}   
+}

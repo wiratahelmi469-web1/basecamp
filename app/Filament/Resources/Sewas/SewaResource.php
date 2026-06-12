@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SewaResource extends Resource
 {
@@ -35,7 +36,7 @@ class SewaResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\DetailPenyewaanRelationManager::class,
         ];
     }
 
@@ -46,5 +47,15 @@ class SewaResource extends Resource
             'create' => CreateSewa::route('/create'),
             'edit' => EditSewa::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with([
+                'user',
+                'admin',
+                'detailPenyewaan.produk',
+            ]);
     }
 }

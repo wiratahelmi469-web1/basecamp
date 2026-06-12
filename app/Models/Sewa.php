@@ -34,9 +34,12 @@ class Sewa extends Model
         return $this->belongsTo(User::class, 'admin_id');
     }
 
-    public function detailPenyewaan(): HasMany
+    public function detailPenyewaan()
     {
-        return $this->hasMany(DetailPenyewaan::class, 'sewa_id');
+        return $this->hasMany(
+            DetailPenyewaan::class,
+            'sewa_id'
+        );
     }
 
     public function pembayaran(): HasMany

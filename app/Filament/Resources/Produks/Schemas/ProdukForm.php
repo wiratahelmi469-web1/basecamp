@@ -74,13 +74,16 @@ class ProdukForm
                         'rusak_berat' => 'Rusak Berat',
                         'tidak_aktif' => 'Tidak Aktif',
                     ])
+                    ->default('baik')
                     ->required(),
 
                 FileUpload::make('foto')
                     ->label('Foto Produk')
                     ->image()
                     ->directory('produk')
-                    ->imageEditor(),
+                    ->imageEditor()
+                    ->disk('public')
+                    ->visibility('public'),
             ]);
     }
 }
