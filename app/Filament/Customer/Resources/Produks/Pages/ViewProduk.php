@@ -4,9 +4,12 @@ namespace App\Filament\Customer\Resources\Produks\Pages;
 
 use App\Filament\Customer\Resources\Produks\ProdukResource;
 use App\Models\Keranjang;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 
 class ViewProduk extends ViewRecord
 {
@@ -21,29 +24,45 @@ class ViewProduk extends ViewRecord
                 ->icon('heroicon-o-shopping-cart')
                 ->color('success')
 
-                ->action(function () {
+                ->form([
 
-                    $item = Keranjang::firstOrCreate(
+                    TextInput::make('jumlah')
+                        ->label('Jumlah')
+                        ->numeric()
+                        ->default(1)
+                        ->minValue(1)
+                        ->required(),
+
+                    DatePicker::make('tanggal_sewa')
+                        ->label('Tanggal Sewa')
+                        ->minDate(now())
+                        ->required(),
+
+                    DatePicker::make('tanggal_kembali')
+                        ->required()
+                        ->after('tanggal_sewa')
+
+                ])
+
+                ->action(function (array $data) {
+
+                    $item = Keranjang::updateOrCreate(
                         [
                             'user_id' => auth()->id(),
                             'produk_id' => $this->record->id,
                         ],
                         [
-                            'jumlah' => 1,
+                            'jumlah' => $data['jumlah'],
+                            'tanggal_sewa' => $data['tanggal_sewa'],
+                            'tanggal_kembali' => $data['tanggal_kembali'],
                         ]
                     );
-
-                    if (! $item->wasRecentlyCreated) {
-
-                        $item->increment('jumlah');
-                    }
 
                     Notification::make()
                         ->title('Produk berhasil ditambahkan ke keranjang')
                         ->success()
                         ->send();
-                }),
-
+                })
         ];
     }
 

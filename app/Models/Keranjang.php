@@ -13,6 +13,13 @@ class Keranjang extends Model
         'user_id',
         'produk_id',
         'jumlah',
+        'tanggal_sewa',
+        'tanggal_kembali',
+    ];
+
+    protected $casts = [
+        'tanggal_sewa' => 'date',
+        'tanggal_kembali' => 'date',
     ];
 
     public function user(): BelongsTo
