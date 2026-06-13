@@ -22,6 +22,14 @@ class ProdukResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'nama';
 
+    protected static ?string $navigationLabel = 'Produk';
+
+    protected static ?string $modelLabel = 'Produk';
+
+    protected static ?string $pluralModelLabel = 'Produk';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Master Data';
+
     public static function form(Schema $schema): Schema
     {
         return ProdukForm::configure($schema);

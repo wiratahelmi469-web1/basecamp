@@ -23,6 +23,14 @@ class SewaResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'kode_sewa';
 
+    protected static ?string $navigationLabel = 'Penyewaan';
+
+    protected static ?string $modelLabel = 'Penyewaan';
+
+    protected static ?string $pluralModelLabel = 'Penyewaan';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Laporan';
+
     public static function form(Schema $schema): Schema
     {
         return SewaForm::configure($schema);

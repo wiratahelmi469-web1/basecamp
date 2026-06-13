@@ -22,6 +22,14 @@ class PembayaranResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'kode_pembayaran';
 
+    protected static ?string $navigationLabel = 'Pembayaran';
+
+    protected static ?string $modelLabel = 'Pembayaran';
+
+    protected static ?string $pluralModelLabel = 'Pembayaran';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Laporan';
+
     public static function form(Schema $schema): Schema
     {
         return PembayaranForm::configure($schema);

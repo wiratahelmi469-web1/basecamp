@@ -18,35 +18,36 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Firefly\FilamentBlog\Resources\Posts\PostResource;
-use Firefly\FilamentBlog\Resources\Categories\CategoryResource;
 
-class AdminPanelProvider extends PanelProvider
+class CustomerPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('customer')
+            ->path('customer')
             ->login()
+            ->brandName('Basecamp Customer')
             ->colors([
                 'primary' => Color::Amber,
             ])
-
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->resources([
-                PostResource::class,
-                CategoryResource::class,
-            ])
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(
+                in: app_path('Filament/Customer/Resources'),
+                for: 'App\\Filament\\Customer\\Resources'
+            )
+            ->discoverPages(
+                in: app_path('Filament/Customer/Pages'),
+                for: 'App\\Filament\\Customer\\Pages'
+            )
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(
+                in: app_path('Filament/Customer/Widgets'),
+                for: 'App\\Filament\\Customer\\Widgets'
+            )
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                \App\Filament\Customer\Widgets\CustomerStats::class,
             ])
             ->middleware([
                 EncryptCookies::class,

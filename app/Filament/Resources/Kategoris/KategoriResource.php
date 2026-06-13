@@ -22,6 +22,14 @@ class KategoriResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'nama';
 
+    protected static ?string $navigationLabel = 'Kategori';
+
+    protected static ?string $modelLabel = 'Kategori';
+
+    protected static ?string $pluralModelLabel = 'Kategori';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Master Data';
+
     public static function form(Schema $schema): Schema
     {
         return KategoriForm::configure($schema);

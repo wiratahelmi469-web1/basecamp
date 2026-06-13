@@ -7,6 +7,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -40,16 +41,23 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * Izinkan hanya admin yang aktif mengakses Filament.
+     * Hak akses panel Filament.
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === 'admin' && $this->is_aktif;
+        if (! $this->is_aktif) {
+            return false;
+        }
+
+        return match ($panel->getId()) {
+            'admin'    => $this->role === 'admin',
+            'customer' => $this->role === 'customer',
+            default    => false,
+        };
     }
 
     /**
-     * Membuat atribut "name" virtual karena Filament
-     * secara default mencari kolom name.
+     * Agar Filament tetap menemukan atribut "name".
      */
     public function getNameAttribute(): string
     {
@@ -57,10 +65,15 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * Nama yang ditampilkan di Filament.
+     * Nama yang tampil di panel Filament.
      */
     public function getFilamentName(): string
     {
         return $this->nama ?? '';
+    }
+
+    public function keranjang(): HasMany
+    {
+        return $this->hasMany(Keranjang::class);
     }
 }
