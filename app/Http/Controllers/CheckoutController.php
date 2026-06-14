@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailPenyewaan;
 use App\Models\Keranjang;
 use App\Models\Sewa;
-use App\Models\DetailPenyewaan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -34,7 +34,7 @@ class CheckoutController extends Controller
             $totalDeposit = 0;
 
             $sewa = Sewa::create([
-                'kode_sewa' => 'SW-' . now()->format('YmdHis'),
+                'kode_sewa' => 'SW-'.now()->format('YmdHis'),
                 'user_id' => auth()->id(),
                 'tanggal_sewa' => $items->first()->tanggal_sewa,
                 'tanggal_kembali' => $items->first()->tanggal_kembali,

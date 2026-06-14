@@ -18,8 +18,10 @@ class ProduksTable
 
                 ImageColumn::make('foto')
                     ->label('Foto')
-                    ->circular()
-                    ->defaultImageUrl('https://placehold.co/100x100'),
+                    ->disk('public')
+                    ->visibility('public')
+                    ->square()
+                    ->size(80),
 
                 TextColumn::make('kode_produk')
                     ->label('Kode')
@@ -49,7 +51,7 @@ class ProduksTable
                 TextColumn::make('stok_tersedia')
                     ->label('Stok Tersedia')
                     ->badge()
-                    ->color(fn($state) => match (true) {
+                    ->color(fn ($state) => match (true) {
                         $state <= 0 => 'danger',
                         $state <= 3 => 'warning',
                         default => 'success',
@@ -69,7 +71,7 @@ class ProduksTable
                 TextColumn::make('kondisi')
                     ->label('Kondisi')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'baik' => 'Baik',
                         'rusak_ringan' => 'Rusak Ringan',
                         'rusak_berat' => 'Rusak Berat',

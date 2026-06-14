@@ -19,8 +19,7 @@ class PembayaranController extends Controller
     public function store(
         Request $request,
         Sewa $sewa
-    )
-    {
+    ) {
         $request->validate([
             'metode' => 'required',
             'bukti_bayar' => 'required|image|max:2048',
@@ -33,15 +32,13 @@ class PembayaranController extends Controller
 
         Pembayaran::create([
             'sewa_id' => $sewa->id,
-            'kode_pembayaran' =>
-                'PAY-' . now()->format('YmdHis'),
+            'kode_pembayaran' => 'PAY-'.now()->format('YmdHis'),
 
             'jenis' => 'sewa',
 
             'metode' => $request->metode,
 
-            'jumlah' =>
-                $sewa->total_harga +
+            'jumlah' => $sewa->total_harga +
                 $sewa->total_deposit,
 
             'status' => 'menunggu',

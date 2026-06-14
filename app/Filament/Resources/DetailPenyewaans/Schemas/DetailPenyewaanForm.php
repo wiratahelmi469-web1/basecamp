@@ -4,8 +4,8 @@ namespace App\Filament\Resources\DetailPenyewaans\Schemas;
 
 use App\Models\Produk;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -34,7 +34,7 @@ class DetailPenyewaanForm
 
                         $produk = Produk::find($state);
 
-                        if (!$produk) {
+                        if (! $produk) {
                             return;
                         }
 
@@ -59,7 +59,7 @@ class DetailPenyewaanForm
 
                             $produk = Produk::find($get('produk_id'));
 
-                            if (!$produk) {
+                            if (! $produk) {
                                 return;
                             }
 
@@ -120,7 +120,6 @@ class DetailPenyewaanForm
                         'rusak_ringan' => 'Rusak Ringan',
                         'rusak_berat' => 'Rusak Berat',
                     ]),
-                    
 
                 Textarea::make('catatan_kondisi')
                     ->label('Catatan Kondisi')

@@ -15,7 +15,7 @@ class PostObserver
 
         if (
             $post->status === 'published' &&
-            !$post->published_at
+            ! $post->published_at
         ) {
             $post->published_at = now();
         }
@@ -30,7 +30,7 @@ class PostObserver
 
         if (
             $post->status === 'published' &&
-            !$post->published_at
+            ! $post->published_at
         ) {
             $post->published_at = now();
         }

@@ -10,8 +10,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -25,7 +23,14 @@ class CustomerPanelProvider extends PanelProvider
     {
         return $panel
             ->id('customer')
-            ->path('customer')
+            /* |--------------------------------------------------------------------------
+            | 1. UBAH PATH AGAR TIDAK MENABRAK BREEZE
+            |--------------------------------------------------------------------------
+            | Mengubah 'customer' menjadi 'customer-admin' agar rute '/customer'
+            | bisa digunakan sepenuhnya oleh Laravel Breeze + Tailwind CSS Anda.
+            */
+            ->path('customer-admin')
+
             ->login()
             ->brandName('Basecamp Customer')
             ->colors([
@@ -46,8 +51,14 @@ class CustomerPanelProvider extends PanelProvider
                 in: app_path('Filament/Customer/Widgets'),
                 for: 'App\\Filament\\Customer\\Widgets'
             )
+            /* |--------------------------------------------------------------------------
+            | 2. HAPUS / KOMENTARI WIDGET YANG ERROR
+            |--------------------------------------------------------------------------
+            | Class 'CustomerStats::class' dihapus dari array ini karena filenya tidak
+            | ditemukan atau jalurnya salah, yang menyebabkan Internal Server Error.
+            */
             ->widgets([
-                \App\Filament\Customer\Widgets\CustomerStats::class,
+                // \App\Filament\Customer\Widgets\CustomerStats::class, (Dikomit karena tidak ditemukan)
             ])
             ->middleware([
                 EncryptCookies::class,

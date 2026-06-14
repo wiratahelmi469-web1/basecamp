@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -18,14 +19,14 @@ return new class() extends Migration {
         $columnName1 = config('filamentblog.user.columns.designation');
         $columnName2 = config('filamentblog.user.columns.bio');
 
-        Schema::create(config('filamentblog.tables.prefix') . 'categories', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 155)->unique();
             $table->string('slug', 155)->unique();
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'posts', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'posts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('slug');
@@ -45,21 +46,21 @@ return new class() extends Migration {
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'category_' . config('filamentblog.tables.prefix') . 'post', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'category_'.config('filamentblog.tables.prefix').'post', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("post_id")
-                ->constrained(table: config('filamentblog.tables.prefix') . 'posts')
+            $table->foreignId('post_id')
+                ->constrained(table: config('filamentblog.tables.prefix').'posts')
                 ->cascadeOnDelete();
-            $table->foreignId("category_id")
-                ->constrained(table: config('filamentblog.tables.prefix') . 'categories')
+            $table->foreignId('category_id')
+                ->constrained(table: config('filamentblog.tables.prefix').'categories')
                 ->cascadeOnDelete();
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'seo_details', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'seo_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("post_id")
-                ->constrained(table: config('filamentblog.tables.prefix') . 'posts')
+            $table->foreignId('post_id')
+                ->constrained(table: config('filamentblog.tables.prefix').'posts')
                 ->cascadeOnDelete();
             $table->string('title');
             $table->json('keywords')->nullable();
@@ -67,7 +68,7 @@ return new class() extends Migration {
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'comments', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'comments', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedInteger(config('filamentblog.user.foreign_key'));
@@ -78,7 +79,7 @@ return new class() extends Migration {
                 ->cascadeOnDelete();
 
             $table->foreignId('post_id')
-                ->constrained(table: config('filamentblog.tables.prefix') . 'posts')
+                ->constrained(table: config('filamentblog.tables.prefix').'posts')
                 ->cascadeOnDelete();
 
             $table->text('comment');
@@ -87,55 +88,54 @@ return new class() extends Migration {
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'news_letters', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'news_letters', function (Blueprint $table) {
             $table->id();
             $table->string('email', 100)->unique();
             $table->boolean('subscribed')->default(true);
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'tags', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'tags', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('slug', 155)->unique();
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'post_' . config('filamentblog.tables.prefix') . 'tag', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'post_'.config('filamentblog.tables.prefix').'tag', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("post_id")
-                ->constrained(table: config('filamentblog.tables.prefix') . 'posts')
+            $table->foreignId('post_id')
+                ->constrained(table: config('filamentblog.tables.prefix').'posts')
                 ->cascadeOnDelete();
-            $table->foreignId("tag_id")
-                ->constrained(table: config('filamentblog.tables.prefix') . 'tags')
+            $table->foreignId('tag_id')
+                ->constrained(table: config('filamentblog.tables.prefix').'tags')
                 ->cascadeOnDelete();
             $table->timestamps();
         });
 
-
         // Check if the column exists
-        if (!Schema::hasColumn($tableName, $columnName)) {
+        if (! Schema::hasColumn($tableName, $columnName)) {
             // Column doesn't exist, so add it to the table
             Schema::table($tableName, function (Blueprint $table) use ($columnName) {
                 $table->string($columnName)->nullable();
             });
         }
 
-        if (!Schema::hasColumn($tableName, $columnName1)) {
+        if (! Schema::hasColumn($tableName, $columnName1)) {
             // Column doesn't exist, so add it to the table
             Schema::table($tableName, function (Blueprint $table) use ($columnName1) {
                 $table->string($columnName1)->nullable();
             });
         }
 
-        if (!Schema::hasColumn($tableName, $columnName2)) {
+        if (! Schema::hasColumn($tableName, $columnName2)) {
             // Column doesn't exist, so add it to the table
             Schema::table($tableName, function (Blueprint $table) use ($columnName2) {
                 $table->string($columnName2)->nullable();
             });
         }
 
-        Schema::create(config('filamentblog.tables.prefix') . 'share_snippets', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'share_snippets', function (Blueprint $table) {
             $table->id();
             $table->longText('script_code');
             $table->text('html_code');
@@ -143,7 +143,7 @@ return new class() extends Migration {
             $table->timestamps();
         });
 
-        Schema::create(config('filamentblog.tables.prefix') . 'settings', function (Blueprint $table) {
+        Schema::create(config('filamentblog.tables.prefix').'settings', function (Blueprint $table) {
             $table->id();
             $table->string('title', 155)->nullable();
             $table->text('description')->nullable();
@@ -165,16 +165,16 @@ return new class() extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'categories');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'categories');
         Schema::dropIfExists(config('filamentblog.user.model'));
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'posts');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'category_' . config('filamentblog.tables.prefix') . 'post');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'seo_details');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'comments');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'news_letters');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'tags');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'post_' . config('filamentblog.tables.prefix') . 'tag');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'share_snippets');
-        Schema::dropIfExists(config('filamentblog.tables.prefix') . 'settings');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'posts');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'category_'.config('filamentblog.tables.prefix').'post');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'seo_details');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'comments');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'news_letters');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'tags');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'post_'.config('filamentblog.tables.prefix').'tag');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'share_snippets');
+        Schema::dropIfExists(config('filamentblog.tables.prefix').'settings');
     }
 };

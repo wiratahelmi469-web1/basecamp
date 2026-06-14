@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\PendapatanChart;
+use App\Filament\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -10,14 +12,16 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Firefly\FilamentBlog\Resources\Categories\CategoryResource;
+use Firefly\FilamentBlog\Resources\Comments\CommentResource;
+use Firefly\FilamentBlog\Resources\Posts\PostResource;
+use Firefly\FilamentBlog\Resources\Tags\TagResource;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Firefly\FilamentBlog\Resources\Posts\PostResource;
-use Firefly\FilamentBlog\Resources\Categories\CategoryResource;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,20 +35,30 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+
+            /*
+            |--------------------------------------------------------------------------
+            | PENDAFTARAN RESOURCE FILAMENT BLOG (MANUAL & LENGKAP)
+            |--------------------------------------------------------------------------
+            | Kita daftarkan semua Resource bawaan Firefly secara eksplisit di sini
+            | agar terhindar dari error 'Plugin class not found'.
+            */
             ->resources([
                 PostResource::class,
                 CategoryResource::class,
+                TagResource::class,
+                CommentResource::class,
             ])
+
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                \App\Filament\Widgets\StatsOverview::class,
-                \App\Filament\Widgets\PendapatanChart::class,
+                StatsOverview::class,
+                PendapatanChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

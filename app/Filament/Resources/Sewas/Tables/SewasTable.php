@@ -55,8 +55,7 @@ class SewasTable
                     ->getStateUsing(function ($record) {
                         return $record->detailPenyewaan
                             ->map(
-                                fn($item) =>
-                                $item->produk->nama . ' (' . $item->jumlah . 'x)'
+                                fn ($item) => $item->produk->nama.' ('.$item->jumlah.'x)'
                             )
                             ->implode(', ');
                     })
@@ -66,7 +65,7 @@ class SewasTable
                 TextColumn::make('detailPenyewaan_count')
                     ->counts('detailPenyewaan')
                     ->label('Jumlah Item')
-                    ->badge(),  
+                    ->badge(),
 
                 TextColumn::make('total_harga')
                     ->label('Total Harga')

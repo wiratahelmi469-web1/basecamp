@@ -8,10 +8,8 @@ use App\Filament\Resources\DetailPenyewaans\Pages\ListDetailPenyewaans;
 use App\Filament\Resources\DetailPenyewaans\Schemas\DetailPenyewaanForm;
 use App\Filament\Resources\DetailPenyewaans\Tables\DetailPenyewaansTable;
 use App\Models\DetailPenyewaan;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class DetailPenyewaanResource extends Resource

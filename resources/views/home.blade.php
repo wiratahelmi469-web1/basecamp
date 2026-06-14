@@ -98,8 +98,21 @@
 
         <div class="container">
 
-            <a class="navbar-brand fw-bold" href="/">
-                🏕 Basecamp Outdoor
+            <a href="{{ route('home') }}"
+                class="navbar-brand fw-bold text-white fs-2">
+
+                🏔 Basecamp
+
+                <span
+                    style="
+            font-size:12px;
+            letter-spacing:2px;
+            color:#22c55e;
+            display:block;
+        ">
+                    OUTDOOR RENTAL
+                </span>
+
             </a>
 
             <button class="navbar-toggler"

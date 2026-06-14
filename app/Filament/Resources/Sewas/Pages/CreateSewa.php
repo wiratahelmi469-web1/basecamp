@@ -23,13 +23,13 @@ class CreateSewa extends CreateRecord
         while (
             Sewa::where(
                 'kode_sewa',
-                'SW-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT)
+                'SW-'.str_pad($nextNumber, 4, '0', STR_PAD_LEFT)
             )->exists()
         ) {
             $nextNumber++;
         }
 
-        $data['kode_sewa'] = 'SW-' . str_pad(
+        $data['kode_sewa'] = 'SW-'.str_pad(
             $nextNumber,
             4,
             '0',

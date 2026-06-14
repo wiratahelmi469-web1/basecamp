@@ -5,9 +5,9 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -41,7 +41,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * Hak akses panel Filament.
+     * Hak akses panel Filament
      */
     public function canAccessPanel(Panel $panel): bool
     {
@@ -50,14 +50,14 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return match ($panel->getId()) {
-            'admin'    => $this->role === 'admin',
+            'admin' => $this->role === 'admin',
             'customer' => $this->role === 'customer',
-            default    => false,
+            default => false,
         };
     }
 
     /**
-     * Agar Filament tetap menemukan atribut "name".
+     * Kompatibel dengan package yang memanggil $user->name
      */
     public function getNameAttribute(): string
     {
@@ -65,7 +65,25 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * Nama yang tampil di panel Filament.
+     * Kompatibel dengan package yang memanggil $user->name()
+     */
+    public function name(): string
+    {
+        return $this->nama ?? '';
+    }
+
+    /**
+     * Kompatibel dengan package yang memanggil $user->avatar
+     */
+    public function getAvatarAttribute(): string
+    {
+        return $this->foto
+            ? asset('storage/'.$this->foto)
+            : 'https://ui-avatars.com/api/?name='.urlencode($this->nama);
+    }
+
+    /**
+     * Nama yang tampil di Filament
      */
     public function getFilamentName(): string
     {

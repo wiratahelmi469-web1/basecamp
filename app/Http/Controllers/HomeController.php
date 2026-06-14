@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
 use App\Models\Kategori;
+use App\Models\Produk;
 use App\Models\Sewa;
 use Firefly\FilamentBlog\Models\Post;
 
@@ -27,9 +27,9 @@ class HomeController extends Controller
                 'user_id',
                 auth()->id()
             )
-            ->latest()
-            ->take(5)
-            ->get();
+                ->latest()
+                ->take(5)
+                ->get();
 
             return view(
                 'customer.marketplace',

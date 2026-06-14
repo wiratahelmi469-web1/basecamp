@@ -1,16 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-use App\Models\Sewa;
-use App\Models\Pembayaran;
-
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProdukController;
-use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Pembayaran;
+use App\Models\Sewa;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,11 +27,21 @@ Route::get('/produk/{produk}', [ProdukController::class, 'show'])
 
 /*
 |--------------------------------------------------------------------------
-| Customer Area
+| Customer Area (Laravel Breeze + Tailwind CSS)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware('auth')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard Customer / Redirector
+    |--------------------------------------------------------------------------
+    | KODE BARU: Rute ini dipasang agar URL '/customer' tidak lagi lari ke Filament,
+    | melainkan otomatis menampilkan halaman indeks pesanan milik customer.
+    */
+    Route::get('/customer', [HomeController::class, 'index'])
+        ->name('customer.dashboard');
 
     /*
     |--------------------------------------------------------------------------
@@ -63,23 +71,20 @@ Route::middleware('auth')->group(function () {
     */
 
     Route::get('/pesanan', function () {
-
         $sewas = Sewa::where(
             'user_id',
             auth()->id()
         )
-        ->latest()
-        ->get();
+            ->latest()
+            ->get();
 
         return view(
             'customer.pesanan.index',
             compact('sewas')
         );
-
     })->name('pesanan.index');
 
     Route::get('/pesanan/{sewa}', function (Sewa $sewa) {
-
         $sewa->load([
             'detailPenyewaan.produk',
             'pembayaran',
@@ -89,7 +94,6 @@ Route::middleware('auth')->group(function () {
             'customer.pesanan.show',
             compact('sewa')
         );
-
     })->name('pesanan.show');
 
     /*
@@ -99,22 +103,20 @@ Route::middleware('auth')->group(function () {
     */
 
     Route::get('/pembayaran', function () {
-
         $pembayaran = Pembayaran::whereHas(
             'sewa',
-            fn ($query) => $query->where(
+            fn($query) => $query->where(
                 'user_id',
                 auth()->id()
             )
         )
-        ->latest()
-        ->get();
+            ->latest()
+            ->get();
 
         return view(
             'customer.pembayaran.index',
             compact('pembayaran')
         );
-
     })->name('pembayaran.index');
 
     Route::get(

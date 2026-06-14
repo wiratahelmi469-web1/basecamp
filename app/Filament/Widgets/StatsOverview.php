@@ -43,7 +43,7 @@ class StatsOverview extends StatsOverviewWidget
 
             Stat::make(
                 'Total Pendapatan',
-                'Rp ' . number_format($totalPendapatan, 0, ',', '.')
+                'Rp '.number_format($totalPendapatan, 0, ',', '.')
             )
                 ->description('Pembayaran berhasil')
                 ->descriptionIcon('heroicon-m-banknotes')

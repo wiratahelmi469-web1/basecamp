@@ -4,11 +4,12 @@ namespace App\Filament\Resources\LaporanTransaksis;
 
 use App\Filament\Resources\LaporanTransaksis\Pages\ManageLaporanTransaksis;
 use App\Models\Sewa;
-use Filament\Resources\Resource;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-use UnitEnum;
 use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use UnitEnum;
 
 class LaporanTransaksiResource extends Resource
 {
@@ -22,7 +23,7 @@ class LaporanTransaksiResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'kode_sewa';
 
-    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
+    public static function form(Schema $schema): Schema
     {
         return $schema;
     }
@@ -64,8 +65,8 @@ class LaporanTransaksiResource extends Resource
                         return $record->detailPenyewaan
                             ->map(function ($detail) {
 
-                                return $detail->produk->nama .
-                                    ' (' . $detail->jumlah . ')';
+                                return $detail->produk->nama.
+                                    ' ('.$detail->jumlah.')';
 
                             })
                             ->implode(', ');
