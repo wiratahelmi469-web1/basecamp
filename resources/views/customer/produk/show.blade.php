@@ -10,13 +10,13 @@
 
             @if($produk->foto)
 
-                <img
-                    src="{{ asset('storage/' . $produk->foto) }}"
-                    class="w-full rounded-3xl shadow">
+            <img
+                src="{{ asset('storage/' . $produk->foto) }}"
+                class="w-full rounded-3xl shadow">
 
             @else
 
-                <div class="h-96 bg-gray-200 rounded-3xl"></div>
+            <div class="h-96 bg-gray-200 rounded-3xl"></div>
 
             @endif
 
@@ -50,7 +50,7 @@
 
                 <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">
 
-                    Stok: {{ $produk->stok }}
+                    Stok: {{ $produk->stok_tersedia }}
 
                 </span>
 
@@ -70,19 +70,34 @@
 
             <div class="flex gap-4 mt-10">
 
-                <button
-                    class="bg-green-600 text-white px-8 py-4 rounded-xl">
+                <form
+                    action="{{ route('keranjang.store') }}"
+                    method="POST">
 
-                    Tambah ke Keranjang
+                    @csrf
 
-                </button>
+                    <input
+                        type="hidden"
+                        name="produk_id"
+                        value="{{ $produk->id }}">
 
-                <button
+                    <button
+                        type="submit"
+                        class="bg-green-600 text-white px-8 py-4 rounded-xl hover:bg-green-700">
+
+                        Tambah ke Keranjang
+
+                    </button>
+
+                </form>
+
+                <a
+                    href="{{ route('keranjang.index') }}"
                     class="border px-8 py-4 rounded-xl">
 
-                    Sewa Sekarang
+                    Lihat Keranjang
 
-                </button>
+                </a>
 
             </div>
 

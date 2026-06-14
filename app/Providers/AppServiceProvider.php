@@ -3,40 +3,31 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
-use App\Models\DetailPenyewaan;
-use App\Models\Sewa;
-
-use App\Observers\DetailPenyewaanObserver;
-use App\Observers\SewaObserver;
-
-use App\Models\Pembayaran;
-use App\Observers\PembayaranObserver;
-
-use App\Models\Post;
-use App\Observers\PostObserver;
+use Illuminate\Support\Facades\View;
+use App\Models\Keranjang;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        DetailPenyewaan::observe(DetailPenyewaanObserver::class);
+        View::composer('*', function ($view) {
 
-        Sewa::observe(SewaObserver::class);
+            $cartCount = 0;
 
-        Pembayaran::observe(PembayaranObserver::class);
+            if (auth()->check()) {
 
-        Post::observe(PostObserver::class);
+                $cartCount = Keranjang::where(
+                    'user_id',
+                    auth()->id()
+                )->sum('jumlah');
+            }
+
+            $view->with('cartCount', $cartCount);
+        });
     }
 }

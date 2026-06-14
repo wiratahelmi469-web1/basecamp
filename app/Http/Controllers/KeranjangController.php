@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keranjang;
+use App\Models\Produk;
+use Illuminate\Http\Request;
 
 class KeranjangController extends Controller
 {
@@ -17,8 +19,8 @@ class KeranjangController extends Controller
 
         foreach ($items as $item) {
 
-            $jumlahHari =
-                $item->tanggal_sewa->diffInDays($item->tanggal_kembali);
+            $jumlahHari = $item->tanggal_sewa
+                ->diffInDays($item->tanggal_kembali);
 
             if ($jumlahHari < 1) {
                 $jumlahHari = 1;
@@ -29,12 +31,11 @@ class KeranjangController extends Controller
                 $item->jumlah *
                 $jumlahHari;
 
-            $deposit =
+            $totalHarga += $subtotal;
+
+            $totalDeposit +=
                 $item->produk->deposit *
                 $item->jumlah;
-
-            $totalHarga += $subtotal;
-            $totalDeposit += $deposit;
         }
 
         return view(
@@ -45,5 +46,43 @@ class KeranjangController extends Controller
                 'totalDeposit'
             )
         );
+    }
+
+    public function store(Request $request)
+    {
+        $produk = Produk::findOrFail(
+            $request->produk_id
+        );
+
+        $keranjang = Keranjang::where(
+            'user_id',
+            auth()->id()
+        )
+            ->where(
+                'produk_id',
+                $produk->id
+            )
+            ->first();
+
+        if ($keranjang) {
+
+            $keranjang->increment('jumlah');
+        } else {
+
+            Keranjang::create([
+                'user_id' => auth()->id(),
+                'produk_id' => $produk->id,
+                'jumlah' => 1,
+                'tanggal_sewa' => now(),
+                'tanggal_kembali' => now()->addDay(),
+            ]);
+        }
+
+        return redirect()
+            ->route('keranjang.index')
+            ->with(
+                'success',
+                'Produk berhasil ditambahkan ke keranjang.'
+            );
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\LaporanTransaksis\Pages;
 
 use App\Filament\Resources\LaporanTransaksis\LaporanTransaksiResource;
-use App\Filament\Widgets\LaporanTransaksiStats;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageLaporanTransaksis extends ManageRecords
@@ -17,9 +16,7 @@ class ManageLaporanTransaksis extends ManageRecords
 
     protected function getHeaderWidgets(): array
     {
-        return [
-            LaporanTransaksiStats::class,
-        ];
+        return [];
     }
 
     public function getTitle(): string

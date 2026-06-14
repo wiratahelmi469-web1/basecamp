@@ -44,6 +44,9 @@ class Sewa extends Model
 
     public function pembayaran(): HasMany
     {
-        return $this->hasMany(Pembayaran::class, 'sewa_id');
+        return $this->hasMany(
+            Pembayaran::class,
+            'sewa_id'
+        );
     }
 }
