@@ -16,4 +16,16 @@ class EditPembayaran extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        if (
+            $this->record->status === 'berhasil'
+            && $this->record->sewa
+        ) {
+            $this->record->sewa->update([
+                'status' => 'dikonfirmasi',
+            ]);
+        }
+    }
 }

@@ -44,20 +44,25 @@
                 {{-- Cart Icon (hanya saat login) --}}
                 @auth
                 @php
-                $cartCount = count(session('cart', []));
+                $cartCount = \App\Models\Keranjang::where('user_id', auth()->id())
+                ->sum('jumlah');
                 @endphp
+
                 <a href="{{ route('keranjang.index') }}"
                     class="relative w-9 h-9 rounded-lg flex items-center justify-center text-slate-500
-                              hover:text-amber-500 hover:bg-amber-50 transition-all duration-200
-                              {{ request()->routeIs('keranjang.*') ? 'text-amber-500 bg-amber-50' : '' }}">
+            hover:text-amber-500 hover:bg-amber-50 transition-all duration-200
+            {{ request()->routeIs('keranjang.*') ? 'text-amber-500 bg-amber-50' : '' }}">
+
                     <i class="fa-solid fa-basket-shopping text-base"></i>
+
                     @if ($cartCount > 0)
-                    <span class="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1
-                                         bg-amber-500 text-white text-[9px] font-bold
-                                         rounded-full flex items-center justify-center leading-none">
-                        {{ $cartCount > 9 ? '9+' : $cartCount }}
+                    <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px]
+                    bg-red-500 text-white text-[10px] font-bold
+                    rounded-full flex items-center justify-center">
+                        {{ $cartCount > 99 ? '99+' : $cartCount }}
                     </span>
                     @endif
+
                 </a>
                 @endauth
 

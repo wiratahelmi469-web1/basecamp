@@ -25,7 +25,11 @@ class KeranjangController extends Controller
             $totalDeposit += $item->produk->deposit * $item->jumlah;
         }
 
-        return view('keranjang.index', compact('items', 'totalHarga', 'totalDeposit'));
+        return view('customer.keranjang.index', compact(
+            'items',
+            'totalHarga',
+            'totalDeposit'
+        ));
     }
 
     public function store(Request $request)
