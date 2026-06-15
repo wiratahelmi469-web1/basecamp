@@ -1,182 +1,125 @@
-@extends('customer.layouts.app')
+<x-app-layout>
+    <div class="min-h-screen bg-slate-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-@section('content')
-
-<div class="max-w-6xl mx-auto px-6 py-10">
-
-    <div class="bg-white rounded-2xl shadow p-8 mb-8">
-
-        <div class="flex justify-between items-center">
-
-            <div>
-
-                <h1 class="text-3xl font-bold">
-                    Detail Pesanan
-                </h1>
-
-                <p class="text-gray-500 mt-2">
-                    Kode Sewa:
-                    <strong>{{ $sewa->kode_sewa }}</strong>
-                </p>
-
-            </div>
-
-            <div>
+            {{-- Header --}}
+            <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <a href="{{ route('pesanan.index') }}"
+                       class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-3 transition-colors">
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                        Kembali ke Pesanan
+                    </a>
+                    <h1 class="text-3xl font-bold text-slate-900">Detail Pesanan</h1>
+                    <p class="text-slate-500 mt-1">Kode Sewa: <span class="font-semibold text-slate-700">{{ $sewa->kode_sewa }}</span></p>
+                </div>
 
                 @php
-                    $statusColor = match($sewa->status) {
-                        'menunggu' => 'bg-yellow-100 text-yellow-700',
-                        'dikonfirmasi' => 'bg-blue-100 text-blue-700',
-                        'disewa' => 'bg-indigo-100 text-indigo-700',
-                        'dikembalikan' => 'bg-purple-100 text-purple-700',
-                        'selesai' => 'bg-green-100 text-green-700',
-                        'dibatalkan' => 'bg-red-100 text-red-700',
-                        default => 'bg-gray-100 text-gray-700',
+                    $statusConfig = match($sewa->status) {
+                        'menunggu'     => ['bg-amber-50 text-amber-700', 'bg-amber-500'],
+                        'dikonfirmasi' => ['bg-blue-50 text-blue-700', 'bg-blue-500'],
+                        'disewa','dipinjam' => ['bg-indigo-50 text-indigo-700', 'bg-indigo-500'],
+                        'dikembalikan' => ['bg-purple-50 text-purple-700', 'bg-purple-500'],
+                        'selesai'      => ['bg-emerald-50 text-emerald-700', 'bg-emerald-500'],
+                        'dibatalkan'   => ['bg-red-50 text-red-700', 'bg-red-500'],
+                        default        => ['bg-slate-100 text-slate-600', 'bg-slate-400'],
                     };
                 @endphp
-
-                <span class="px-4 py-2 rounded-full {{ $statusColor }}">
+                <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold {{ $statusConfig[0] }}">
+                    <span class="w-2 h-2 rounded-full {{ $statusConfig[1] }}"></span>
                     {{ ucfirst($sewa->status) }}
                 </span>
-
             </div>
 
-        </div>
+            <div class="grid lg:grid-cols-3 gap-6">
 
-    </div>
+                {{-- Produk Disewa --}}
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                        <h2 class="text-lg font-bold text-slate-900 mb-5">Produk Disewa</h2>
 
-    <div class="grid lg:grid-cols-3 gap-8">
+                        <div class="divide-y divide-slate-100">
+                            @foreach($sewa->detailPenyewaan as $detail)
+                                <div class="py-4 first:pt-0 last:pb-0">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex items-start gap-3">
+                                            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+                                                <i class="fa-solid fa-box text-slate-400"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-semibold text-slate-900">{{ $detail->produk->nama }}</p>
+                                                <p class="text-sm text-slate-500 mt-0.5">
+                                                    {{ $detail->jumlah }} unit &middot; {{ $detail->jumlah_hari }} hari
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <p class="font-bold text-slate-900 shrink-0">
+                                            Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
 
-        <div class="lg:col-span-2">
+                {{-- Ringkasan --}}
+                <div>
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sticky top-24">
+                        <h2 class="text-lg font-bold text-slate-900 mb-5">Ringkasan</h2>
 
-            <div class="bg-white rounded-2xl shadow p-6">
-
-                <h2 class="text-xl font-bold mb-6">
-                    Produk Disewa
-                </h2>
-
-                @foreach($sewa->detailPenyewaan as $detail)
-
-                    <div class="border-b py-4 last:border-b-0">
-
-                        <div class="flex justify-between">
-
-                            <div>
-
-                                <h3 class="font-semibold text-lg">
-                                    {{ $detail->produk->nama }}
-                                </h3>
-
-                                <p class="text-gray-500">
-                                    Jumlah:
-                                    {{ $detail->jumlah }}
-                                </p>
-
-                                <p class="text-gray-500">
-                                    Durasi:
-                                    {{ $detail->jumlah_hari }} Hari
-                                </p>
-
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Tanggal Sewa</span>
+                                <span class="font-medium text-slate-900">
+                                    {{ \Carbon\Carbon::parse($sewa->tanggal_sewa)->format('d M Y') }}
+                                </span>
                             </div>
-
-                            <div class="text-right">
-
-                                <p class="font-bold text-green-600">
-                                    Rp {{ number_format($detail->subtotal,0,',','.') }}
-                                </p>
-
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Tanggal Kembali</span>
+                                <span class="font-medium text-slate-900">
+                                    {{ \Carbon\Carbon::parse($sewa->tanggal_kembali)->format('d M Y') }}
+                                </span>
                             </div>
-
                         </div>
 
+                        <hr class="my-4 border-slate-100">
+
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Total Sewa</span>
+                                <span class="font-medium text-slate-900">
+                                    Rp {{ number_format($sewa->total_harga, 0, ',', '.') }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Total Deposit</span>
+                                <span class="font-medium text-slate-900">
+                                    Rp {{ number_format($sewa->total_deposit, 0, ',', '.') }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 border-slate-100">
+
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-slate-900">Total Tagihan</span>
+                            <span class="font-bold text-lg text-slate-900">
+                                Rp {{ number_format($sewa->total_harga + $sewa->total_deposit, 0, ',', '.') }}
+                            </span>
+                        </div>
+
+                        @if($sewa->status === 'menunggu')
+                            <a href="{{ route('pembayaran.create', $sewa->id) }}"
+                               class="block text-center mt-5 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors duration-150">
+                                <i class="fa-solid fa-credit-card mr-2"></i>
+                                Bayar Sekarang
+                            </a>
+                        @endif
                     </div>
-
-                @endforeach
+                </div>
 
             </div>
-
         </div>
-
-        <div>
-
-            <div class="bg-white rounded-2xl shadow p-6 sticky top-24">
-
-                <h2 class="text-xl font-bold mb-6">
-                    Ringkasan
-                </h2>
-
-                <div class="flex justify-between mb-3">
-
-                    <span>Tanggal Sewa</span>
-
-                    <span>
-                        {{ \Carbon\Carbon::parse($sewa->tanggal_sewa)->format('d M Y') }}
-                    </span>
-
-                </div>
-
-                <div class="flex justify-between mb-3">
-
-                    <span>Tanggal Kembali</span>
-
-                    <span>
-                        {{ \Carbon\Carbon::parse($sewa->tanggal_kembali)->format('d M Y') }}
-                    </span>
-
-                </div>
-
-                <hr class="my-4">
-
-                <div class="flex justify-between mb-3">
-
-                    <span>Total Sewa</span>
-
-                    <span>
-                        Rp {{ number_format($sewa->total_harga,0,',','.') }}
-                    </span>
-
-                </div>
-
-                <div class="flex justify-between mb-3">
-
-                    <span>Total Deposit</span>
-
-                    <span>
-                        Rp {{ number_format($sewa->total_deposit,0,',','.') }}
-                    </span>
-
-                </div>
-
-                <hr class="my-4">
-
-                <div class="flex justify-between font-bold text-lg">
-
-                    <span>Total Tagihan</span>
-
-                    <span class="text-green-600">
-                        Rp {{ number_format($sewa->total_harga + $sewa->total_deposit,0,',','.') }}
-                    </span>
-
-                </div>
-
-                @if($sewa->status === 'menunggu')
-
-                    <a
-                        href="{{ route('pembayaran.create', $sewa->id) }}"
-                        class="block text-center mt-6 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl">
-
-                        Bayar Sekarang
-
-                    </a>
-
-                @endif
-
-            </div>
-
-        </div>
-
     </div>
-
-</div>
-
-@endsection
+</x-app-layout>

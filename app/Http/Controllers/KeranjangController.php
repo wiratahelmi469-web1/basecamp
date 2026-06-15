@@ -14,75 +14,51 @@ class KeranjangController extends Controller
             ->where('user_id', auth()->id())
             ->get();
 
-        $totalHarga = 0;
+        $totalHarga   = 0;
         $totalDeposit = 0;
 
         foreach ($items as $item) {
+            $jumlahHari = $item->tanggal_sewa->diffInDays($item->tanggal_kembali);
+            if ($jumlahHari < 1) $jumlahHari = 1;
 
-            $jumlahHari = $item->tanggal_sewa
-                ->diffInDays($item->tanggal_kembali);
-
-            if ($jumlahHari < 1) {
-                $jumlahHari = 1;
-            }
-
-            $subtotal =
-                $item->produk->harga_sewa_per_hari *
-                $item->jumlah *
-                $jumlahHari;
-
-            $totalHarga += $subtotal;
-
-            $totalDeposit +=
-                $item->produk->deposit *
-                $item->jumlah;
+            $totalHarga   += $item->produk->harga_sewa_per_hari * $item->jumlah * $jumlahHari;
+            $totalDeposit += $item->produk->deposit * $item->jumlah;
         }
 
-        return view(
-            'customer.keranjang.index',
-            compact(
-                'items',
-                'totalHarga',
-                'totalDeposit'
-            )
-        );
+        return view('keranjang.index', compact('items', 'totalHarga', 'totalDeposit'));
     }
 
     public function store(Request $request)
     {
-        $produk = Produk::findOrFail(
-            $request->produk_id
-        );
+        $produk = Produk::findOrFail($request->produk_id);
 
-        $keranjang = Keranjang::where(
-            'user_id',
-            auth()->id()
-        )
-            ->where(
-                'produk_id',
-                $produk->id
-            )
+        $keranjang = Keranjang::where('user_id', auth()->id())
+            ->where('produk_id', $produk->id)
             ->first();
 
         if ($keranjang) {
-
             $keranjang->increment('jumlah');
         } else {
-
             Keranjang::create([
-                'user_id' => auth()->id(),
-                'produk_id' => $produk->id,
-                'jumlah' => 1,
-                'tanggal_sewa' => now(),
+                'user_id'         => auth()->id(),
+                'produk_id'       => $produk->id,
+                'jumlah'          => 1,
+                'tanggal_sewa'    => now(),
                 'tanggal_kembali' => now()->addDay(),
             ]);
         }
 
-        return redirect()
-            ->route('keranjang.index')
-            ->with(
-                'success',
-                'Produk berhasil ditambahkan ke keranjang.'
-            );
+        $cartCount = Keranjang::where('user_id', auth()->id())->count();
+
+        // Kalau request AJAX → return JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message'    => 'Produk berhasil ditambahkan ke keranjang!',
+                'cart_count' => $cartCount,
+            ]);
+        }
+
+        // Fallback biasa (form POST)
+        return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
     }
 }

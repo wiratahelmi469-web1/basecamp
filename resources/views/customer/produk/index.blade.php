@@ -1,77 +1,69 @@
-@extends('customer.layouts.app')
+<x-app-layout>
+    <div class="min-h-screen bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-@section('content')
+            {{-- Header --}}
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-900">Katalog Produk</h1>
+                <p class="text-slate-500 mt-1">Pilih perlengkapan outdoor terbaik untuk petualanganmu.</p>
+            </div>
 
-<div class="max-w-7xl mx-auto px-6 py-16">
+            {{-- Grid Produk --}}
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
 
-    <div class="mb-10">
+                @foreach($produks as $produk)
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group">
 
-        <h1 class="text-5xl font-bold">
-            Katalog Produk
-        </h1>
+                        {{-- Foto --}}
+                        <div class="relative h-48 overflow-hidden">
+                            @if($produk->foto)
+                                <img src="{{ asset('storage/' . $produk->foto) }}"
+                                     alt="{{ $produk->nama }}"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            @else
+                                <div class="w-full h-full bg-slate-100 flex flex-col items-center justify-center gap-2">
+                                    <i class="fa-solid fa-image text-slate-300 text-3xl"></i>
+                                    <span class="text-xs text-slate-400">Tidak Ada Foto</span>
+                                </div>
+                            @endif
 
-        <p class="text-gray-500 mt-3">
-            Pilih perlengkapan outdoor terbaik untuk petualanganmu.
-        </p>
+                            @if($produk->kategori)
+                                <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-slate-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">
+                                    {{ $produk->kategori->nama }}
+                                </span>
+                            @endif
+                        </div>
 
-    </div>
+                        {{-- Info --}}
+                        <div class="p-4">
+                            <h3 class="font-semibold text-slate-900 text-sm leading-snug line-clamp-2">
+                                {{ $produk->nama }}
+                            </h3>
 
-    <div class="grid md:grid-cols-4 gap-8">
+                            <div class="mt-3">
+                                <p class="text-xs text-slate-400">Harga sewa</p>
+                                <p class="font-bold text-slate-900 text-base">
+                                    Rp {{ number_format($produk->harga_sewa_per_hari, 0, ',', '.') }}
+                                    <span class="text-xs font-normal text-slate-400">/hari</span>
+                                </p>
+                            </div>
 
-        @foreach($produks as $produk)
+                            <a href="{{ route('produk.show', $produk->id) }}"
+                               class="block text-center mt-4 bg-slate-900 hover:bg-amber-500 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors duration-150">
+                                Lihat Detail
+                            </a>
+                        </div>
 
-            <div class="bg-white rounded-3xl shadow hover:shadow-xl transition overflow-hidden">
-
-                @if($produk->foto)
-
-                    <img
-                        src="{{ asset('storage/' . $produk->foto) }}"
-                        class="h-64 w-full object-cover">
-
-                @else
-
-                    <div class="h-64 bg-gray-200 flex items-center justify-center">
-                        Tidak Ada Foto
                     </div>
-
-                @endif
-
-                <div class="p-5">
-
-                    <h3 class="font-semibold text-lg">
-                        {{ $produk->nama }}
-                    </h3>
-
-                    <p class="text-gray-500 mt-1">
-                        {{ $produk->kategori?->nama }}
-                    </p>
-
-                    <p class="text-green-600 font-bold text-xl mt-4">
-                        Rp {{ number_format($produk->harga_sewa_per_hari,0,',','.') }}/hari
-                    </p>
-
-                    <a
-                        href="{{ route('produk.show',$produk->id) }}"
-                        class="block text-center mt-5 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl">
-
-                        Lihat Detail
-
-                    </a>
-
-                </div>
+                @endforeach
 
             </div>
 
-        @endforeach
+            {{-- Pagination --}}
+            <div class="mt-10">
+                {{ $produks->links() }}
+            </div>
 
+        </div>
     </div>
-
-    <div class="mt-10">
-
-        {{ $produks->links() }}
-
-    </div>
-
-</div>
-
-@endsection
+</x-app-layout>
