@@ -9,6 +9,11 @@ class PendapatanChart extends ChartWidget
 {
     protected ?string $heading = 'Pendapatan Bulanan';
 
+    protected int|string|array $columnSpan = [
+        'md' => 2,
+        'xl' => 3,
+    ];
+
     protected function getData(): array
     {
         $data = [];
