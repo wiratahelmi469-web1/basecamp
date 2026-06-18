@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
+use App\Models\Kategori;
 
 class ProdukController extends Controller
 {
@@ -23,9 +24,14 @@ class ProdukController extends Controller
             ->paginate(12)
             ->withQueryString();
 
+        $kategori = Kategori::orderBy('nama')->get();
+
         return view(
             'customer.produk.index',
-            compact('produks')
+            compact(
+                'produks',
+                'kategori'
+            )
         );
     }
 

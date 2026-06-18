@@ -2,13 +2,14 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\ProdukTerlarisWidget;
 use App\Filament\Widgets\PendapatanChart;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use App\Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -34,7 +35,16 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::Amber,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
+                'danger' => Color::Rose,
+                'info' => Color::Sky,
+                'gray' => Color::Slate,
             ])
+            ->font('Plus Jakarta Sans')
+            ->brandName('')
+            ->brandLogo(asset('images/basecamp-logo.svg'))
+            ->brandLogoHeight('42px')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
 
             /*
@@ -59,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 StatsOverview::class,
                 PendapatanChart::class,
+                ProdukTerlarisWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

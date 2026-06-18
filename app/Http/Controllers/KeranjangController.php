@@ -34,35 +34,41 @@ class KeranjangController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'produk_id' => 'required|exists:produk,id',
+            'tanggal_sewa' => 'required|date',
+            'tanggal_kembali' => 'required|date|after:tanggal_sewa',
+            'jumlah' => 'required|integer|min:1',
+        ]);
+
         $produk = Produk::findOrFail($request->produk_id);
 
-        $keranjang = Keranjang::where('user_id', auth()->id())
-            ->where('produk_id', $produk->id)
-            ->first();
+        if ($request->jumlah > $produk->stok_tersedia) {
 
-        if ($keranjang) {
-            $keranjang->increment('jumlah');
-        } else {
-            Keranjang::create([
-                'user_id'         => auth()->id(),
-                'produk_id'       => $produk->id,
-                'jumlah'          => 1,
-                'tanggal_sewa'    => now(),
-                'tanggal_kembali' => now()->addDay(),
-            ]);
-        }
-
-        $cartCount = Keranjang::where('user_id', auth()->id())->count();
-
-        // Kalau request AJAX → return JSON
-        if ($request->expectsJson()) {
             return response()->json([
-                'message'    => 'Produk berhasil ditambahkan ke keranjang!',
-                'cart_count' => $cartCount,
-            ]);
+                'message' => 'Stok tidak mencukupi.',
+            ], 422);
         }
 
-        // Fallback biasa (form POST)
-        return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
+        Keranjang::create([
+            'user_id' => auth()->id(),
+            'produk_id' => $produk->id,
+
+            'jumlah' => $request->jumlah,
+
+            'tanggal_sewa' => $request->tanggal_sewa,
+
+            'tanggal_kembali' => $request->tanggal_kembali,
+        ]);
+
+        $cartCount = Keranjang::where(
+            'user_id',
+            auth()->id()
+        )->count();
+
+        return response()->json([
+            'message' => 'Produk berhasil ditambahkan ke keranjang!',
+            'cart_count' => $cartCount,
+        ]);
     }
 }

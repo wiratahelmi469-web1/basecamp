@@ -2,15 +2,17 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Kategori;
 use App\Models\Pembayaran;
 use App\Models\Produk;
 use App\Models\Sewa;
+use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends StatsOverviewWidget
 {
+    protected int|string|array $columnSpan = 'full';
+
     protected function getStats(): array
     {
         $totalPendapatan = Pembayaran::where('status', 'berhasil')
@@ -24,16 +26,19 @@ class StatsOverview extends StatsOverviewWidget
             'disewa',
         ])->count();
 
+        $totalCustomer = User::where('role', 'customer')
+            ->count();
+
         return [
 
             Stat::make('Total Produk', Produk::count())
-                ->description('Produk terdaftar')
+                ->description('Produk tersedia')
                 ->descriptionIcon('heroicon-m-cube')
                 ->color('success'),
 
-            Stat::make('Total Kategori', Kategori::count())
-                ->description('Kategori produk')
-                ->descriptionIcon('heroicon-m-squares-2x2')
+            Stat::make('Total Customer', $totalCustomer)
+                ->description('Pelanggan terdaftar')
+                ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
 
             Stat::make('Total Penyewaan', Sewa::count())
@@ -42,20 +47,20 @@ class StatsOverview extends StatsOverviewWidget
                 ->color('warning'),
 
             Stat::make(
-                'Total Pendapatan',
-                'Rp '.number_format($totalPendapatan, 0, ',', '.')
+                'Pendapatan',
+                'Rp ' . number_format($totalPendapatan, 0, ',', '.')
             )
                 ->description('Pembayaran berhasil')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('success'),
 
             Stat::make('Penyewaan Aktif', $sewaAktif)
-                ->description('Sedang berjalan')
+                ->description('Sedang berlangsung')
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('primary'),
 
             Stat::make('Stok Menipis', $stokMenipis)
-                ->description('Stok ≤ 3')
+                ->description('Perlu restock')
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color('danger'),
         ];

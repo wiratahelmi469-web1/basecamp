@@ -6,7 +6,7 @@
             <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <a href="{{ route('pesanan.index') }}"
-                       class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-3 transition-colors">
+                        class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-3 transition-colors">
                         <i class="fa-solid fa-arrow-left text-xs"></i>
                         Kembali ke Pesanan
                     </a>
@@ -15,15 +15,15 @@
                 </div>
 
                 @php
-                    $statusConfig = match($sewa->status) {
-                        'menunggu'     => ['bg-amber-50 text-amber-700', 'bg-amber-500'],
-                        'dikonfirmasi' => ['bg-blue-50 text-blue-700', 'bg-blue-500'],
-                        'disewa','dipinjam' => ['bg-indigo-50 text-indigo-700', 'bg-indigo-500'],
-                        'dikembalikan' => ['bg-purple-50 text-purple-700', 'bg-purple-500'],
-                        'selesai'      => ['bg-emerald-50 text-emerald-700', 'bg-emerald-500'],
-                        'dibatalkan'   => ['bg-red-50 text-red-700', 'bg-red-500'],
-                        default        => ['bg-slate-100 text-slate-600', 'bg-slate-400'],
-                    };
+                $statusConfig = match($sewa->status) {
+                'menunggu' => ['bg-amber-50 text-amber-700', 'bg-amber-500'],
+                'dikonfirmasi' => ['bg-blue-50 text-blue-700', 'bg-blue-500'],
+                'disewa','dipinjam' => ['bg-indigo-50 text-indigo-700', 'bg-indigo-500'],
+                'dikembalikan' => ['bg-purple-50 text-purple-700', 'bg-purple-500'],
+                'selesai' => ['bg-emerald-50 text-emerald-700', 'bg-emerald-500'],
+                'dibatalkan' => ['bg-red-50 text-red-700', 'bg-red-500'],
+                default => ['bg-slate-100 text-slate-600', 'bg-slate-400'],
+                };
                 @endphp
                 <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold {{ $statusConfig[0] }}">
                     <span class="w-2 h-2 rounded-full {{ $statusConfig[1] }}"></span>
@@ -40,24 +40,24 @@
 
                         <div class="divide-y divide-slate-100">
                             @foreach($sewa->detailPenyewaan as $detail)
-                                <div class="py-4 first:pt-0 last:pb-0">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div class="flex items-start gap-3">
-                                            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
-                                                <i class="fa-solid fa-box text-slate-400"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-semibold text-slate-900">{{ $detail->produk->nama }}</p>
-                                                <p class="text-sm text-slate-500 mt-0.5">
-                                                    {{ $detail->jumlah }} unit &middot; {{ $detail->jumlah_hari }} hari
-                                                </p>
-                                            </div>
+                            <div class="py-4 first:pt-0 last:pb-0">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+                                            <i class="fa-solid fa-box text-slate-400"></i>
                                         </div>
-                                        <p class="font-bold text-slate-900 shrink-0">
-                                            Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
-                                        </p>
+                                        <div>
+                                            <p class="font-semibold text-slate-900">{{ $detail->produk->nama }}</p>
+                                            <p class="text-sm text-slate-500 mt-0.5">
+                                                {{ $detail->jumlah }} unit &middot; {{ $detail->jumlah_hari }} hari
+                                            </p>
+                                        </div>
                                     </div>
+                                    <p class="font-bold text-slate-900 shrink-0">
+                                        Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
+                                    </p>
                                 </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>
@@ -109,12 +109,23 @@
                             </span>
                         </div>
 
+                        @if(session('success'))
+                        <div class="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 p-4">
+                            <div class="flex items-center gap-2 text-emerald-700">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span class="font-semibold">
+                                    {{ session('success') }}
+                                </span>
+                            </div>
+                        </div>
+                        @endif
+
                         @if($sewa->status === 'menunggu')
-                            <a href="{{ route('pembayaran.create', $sewa->id) }}"
-                               class="block text-center mt-5 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors duration-150">
-                                <i class="fa-solid fa-credit-card mr-2"></i>
-                                Bayar Sekarang
-                            </a>
+                        <a href="{{ route('pembayaran.create', $sewa->id) }}"
+                            class="block text-center mt-5 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors duration-150">
+                            <i class="fa-solid fa-credit-card mr-2"></i>
+                            Bayar Sekarang
+                        </a>
                         @endif
                     </div>
                 </div>

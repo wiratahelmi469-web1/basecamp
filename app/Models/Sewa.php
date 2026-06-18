@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Sewa extends Model
 {
@@ -42,9 +42,9 @@ class Sewa extends Model
         );
     }
 
-    public function pembayaran(): HasMany
+    public function pembayaran(): HasOne
     {
-        return $this->hasMany(
+        return $this->hasOne(
             Pembayaran::class,
             'sewa_id'
         );

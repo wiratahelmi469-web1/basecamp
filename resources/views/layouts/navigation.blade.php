@@ -3,14 +3,11 @@
         <div class="flex items-center justify-between h-18 py-3">
 
             {{-- ===================== LOGO ===================== --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group shrink-0">
-                <div class="w-9 h-9 bg-slate-900 rounded-xl flex items-center justify-center shadow-sm group-hover:bg-slate-800 transition-colors duration-200">
-                    <i class="fa-solid fa-campground text-amber-400 text-sm"></i>
-                </div>
-                <div class="flex flex-col leading-none">
-                    <span class="font-extrabold text-[17px] text-slate-900 tracking-tight">Basecamp</span>
-                    <span class="text-[9px] font-bold text-amber-500 tracking-[0.18em] uppercase">Outdoor</span>
-                </div>
+            <a href="{{ route('home') }}" class="flex items-center gap-3">
+                <img
+                    src="{{ asset('images/basecamp-logo.svg') }}"
+                    alt="Basecamp Outdoor"
+                    class="h-12 w-auto">
             </a>
 
             {{-- ===================== DESKTOP NAV LINKS ===================== --}}

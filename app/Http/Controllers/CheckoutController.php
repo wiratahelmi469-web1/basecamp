@@ -6,23 +6,35 @@ use App\Models\DetailPenyewaan;
 use App\Models\Keranjang;
 use App\Models\Sewa;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    public function store()
+    public function store(Request $request)
     {
-        $items = Keranjang::with('produk')
-            ->where('user_id', auth()->id())
-            ->get();
+        $selectedItems = $request->selected_items ?? [];
 
-        if ($items->isEmpty()) {
-
+        if (empty($selectedItems)) {
             return redirect()
                 ->route('keranjang.index')
                 ->with(
                     'error',
-                    'Keranjang masih kosong.'
+                    'Pilih minimal 1 produk untuk checkout.'
+                );
+        }
+
+        $items = Keranjang::with('produk')
+            ->where('user_id', auth()->id())
+            ->whereIn('id', $selectedItems)
+            ->get();
+
+        if ($items->isEmpty()) {
+            return redirect()
+                ->route('keranjang.index')
+                ->with(
+                    'error',
+                    'Tidak ada produk yang dipilih.'
                 );
         }
 
@@ -34,7 +46,7 @@ class CheckoutController extends Controller
             $totalDeposit = 0;
 
             $sewa = Sewa::create([
-                'kode_sewa' => 'SW-'.now()->format('YmdHis'),
+                'kode_sewa' => 'SW-' . now()->format('YmdHis'),
                 'user_id' => auth()->id(),
                 'tanggal_sewa' => $items->first()->tanggal_sewa,
                 'tanggal_kembali' => $items->first()->tanggal_kembali,
@@ -77,7 +89,6 @@ class CheckoutController extends Controller
                     $item->produk->deposit *
                     $item->jumlah;
 
-                // Kurangi stok tersedia
                 $item->produk->decrement(
                     'stok_tersedia',
                     $item->jumlah
@@ -89,9 +100,9 @@ class CheckoutController extends Controller
                 'total_deposit' => $totalDeposit,
             ]);
 
-            Keranjang::where(
-                'user_id',
-                auth()->id()
+            Keranjang::whereIn(
+                'id',
+                $items->pluck('id')
             )->delete();
         });
 
@@ -99,6 +110,10 @@ class CheckoutController extends Controller
             ->route(
                 'pesanan.show',
                 $sewa->id
+            )
+            ->with(
+                'success',
+                'Pesanan berhasil dibuat.'
             );
     }
 }
