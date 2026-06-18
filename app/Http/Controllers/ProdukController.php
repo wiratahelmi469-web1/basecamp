@@ -11,12 +11,12 @@ class ProdukController extends Controller
     {
         $query = Produk::with('kategori');
 
-        if (request()->filled('kategori')) {
+        if (request()->filled('search')) {
+            $query->where('nama', 'like', '%' . request('search') . '%');
+        }
 
-            $query->where(
-                'kategori_id',
-                request('kategori')
-            );
+        if (request()->filled('kategori')) {
+            $query->where('kategori_id', request('kategori'));
         }
 
         $produks = $query
@@ -24,14 +24,11 @@ class ProdukController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        $kategori = Kategori::orderBy('nama')->get();
+        $kategoris = Kategori::orderBy('nama')->get();
 
         return view(
             'customer.produk.index',
-            compact(
-                'produks',
-                'kategori'
-            )
+            compact('produks', 'kategoris')
         );
     }
 
