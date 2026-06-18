@@ -32,7 +32,7 @@ class PembayaranController extends Controller
 
         Pembayaran::create([
             'sewa_id' => $sewa->id,
-            'kode_pembayaran' => 'PAY-'.now()->format('YmdHis'),
+            'kode_pembayaran' => 'PAY-' . now()->format('YmdHis'),
 
             'jenis' => 'sewa',
 
@@ -46,6 +46,10 @@ class PembayaranController extends Controller
             'bukti_bayar' => $path,
 
             'catatan' => $request->catatan,
+        ]);
+
+        $sewa->update([
+            'status' => 'menunggu_verifikasi',
         ]);
 
         return redirect()

@@ -121,12 +121,14 @@
                         @endif
 
                         @if($sewa->status === 'menunggu')
-                        <a href="{{ route('pembayaran.create', $sewa->id) }}"
-                            class="block text-center mt-5 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors duration-150">
-                            <i class="fa-solid fa-credit-card mr-2"></i>
+                        <a href="{{ route('pembayaran.create', $sewa->id) }}">
                             Bayar Sekarang
                         </a>
-                        @endif
+                        @elseif($sewa->status === 'menunggu_verifikasi')
+                        <div class="mt-5 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl p-4 text-center font-semibold">
+                            Menunggu Verifikasi Admin
+                        </div>
+                        @endif  
                     </div>
                 </div>
 
