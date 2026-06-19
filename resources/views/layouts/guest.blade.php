@@ -16,18 +16,32 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-slate-50">
-    <div class="min-h-screen flex flex-col justify-center items-center px-4">
-        <div class="mb-6">
-            <a href="{{ route('home') }}">
-                <img
-                    src="{{ asset('images/basecamp-logo.svg') }}"
-                    alt="Basecamp Outdoor"
-                    class="h-16 w-auto mx-auto">
-            </a>
-        </div>
+<body class="font-sans antialiased">
+    <div
+        class="relative min-h-screen flex flex-col items-center justify-center px-4 py-10
+            bg-cover bg-center bg-fixed"
+        style="background-image: url('{{ asset('images/mountain.jpg') }}');">
 
-        <div class="w-full sm:max-w-md mt-6 px-8 py-8 bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200 overflow-hidden rounded-3xl border border-slate-200">
+        {{-- Overlay agar konten tetap terbaca --}}
+        <div class="absolute inset-0 bg-slate-900/50"></div>
+
+        {{-- Logo --}}
+        <a href="{{ route('home') }}" class="relative z-10 mb-6">
+            <img
+                src="{{ asset('images/basecamp-logo.svg') }}"
+                alt="Basecamp Outdoor"
+                class="h-16 w-auto">
+        </a>
+
+        {{-- Form Card --}}
+        <div
+            class="relative z-10 w-full sm:max-w-md
+                px-8 py-8
+                bg-white/85
+                backdrop-blur-md
+                rounded-3xl
+                shadow-2xl
+                border border-white/30">
             {{ $slot }}
         </div>
     </div>
