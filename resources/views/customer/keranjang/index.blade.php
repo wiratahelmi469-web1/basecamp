@@ -47,78 +47,92 @@
                             $jumlahHari = $item->tanggal_sewa->diffInDays($item->tanggal_kembali);
 
                             if ($jumlahHari < 1) {
-                                $jumlahHari = 1;
-                            }
+                                $jumlahHari=1;
+                                }
 
-                            $subtotal =
-                            $item->produk->harga_sewa_per_hari *
-                            $item->jumlah *
-                            $jumlahHari;
-                            @endphp
+                                $subtotal=$item->produk->harga_sewa_per_hari *
+                                $item->jumlah *
+                                $jumlahHari;
+                                @endphp
 
-                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
 
-                                <div class="flex items-start gap-4">
+                                    <div class="flex items-start gap-4">
 
-                                    {{-- Checkbox --}}
-                                    <input
-                                        type="checkbox"
-                                        name="selected_items[]"
-                                        value="{{ $item->id }}"
-                                        class="item-checkbox mt-2 w-5 h-5 rounded border-slate-300 text-amber-500"
-                                        checked>
+                                        {{-- Checkbox --}}
+                                        <input
+                                            type="checkbox"
+                                            name="selected_items[]"
+                                            value="{{ $item->id }}"
+                                            class="item-checkbox mt-2 w-5 h-5 rounded border-slate-300 text-amber-500"
+                                            checked>
 
-                                    {{-- Content --}}
-                                    <div class="flex-1 flex items-start justify-between gap-4">
+                                        {{-- Content --}}
+                                        <div class="flex-1 flex items-start justify-between gap-4">
 
-                                        <div class="flex items-start gap-4">
+                                            <div class="flex items-start gap-4">
 
-                                            <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
-                                                <i class="fa-solid fa-box text-amber-500"></i>
-                                            </div>
+                                                <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+                                                    <i class="fa-solid fa-box text-amber-500"></i>
+                                                </div>
 
-                                            <div>
+                                                <div>
 
-                                                <h2 class="font-bold text-slate-900">
-                                                    {{ $item->produk->nama }}
-                                                </h2>
+                                                    <h2 class="font-bold text-slate-900">
+                                                        {{ $item->produk->nama }}
+                                                    </h2>
 
-                                                <p class="text-sm text-slate-500 mt-1">
-                                                    <i class="fa-regular fa-calendar mr-1"></i>
+                                                    <p class="text-sm text-slate-500 mt-1">
+                                                        <i class="fa-regular fa-calendar mr-1"></i>
 
-                                                    {{ $item->tanggal_sewa->format('d M Y') }}
-                                                    →
-                                                    {{ $item->tanggal_kembali->format('d M Y') }}
-                                                </p>
+                                                        {{ $item->tanggal_sewa->format('d M Y') }}
+                                                        →
+                                                        {{ $item->tanggal_kembali->format('d M Y') }}
+                                                    </p>
 
-                                                <div class="flex gap-4 mt-2 text-sm text-slate-500">
+                                                    <div class="flex gap-4 mt-2 text-sm text-slate-500">
 
-                                                    <span>
-                                                        <i class="fa-solid fa-cubes mr-1"></i>
-                                                        {{ $item->jumlah }} Unit
-                                                    </span>
+                                                        <span>
+                                                            <i class="fa-solid fa-cubes mr-1"></i>
+                                                            {{ $item->jumlah }} Unit
+                                                        </span>
 
-                                                    <span>
-                                                        <i class="fa-solid fa-clock mr-1"></i>
-                                                        {{ $jumlahHari }} Hari
-                                                    </span>
+                                                        <span>
+                                                            <i class="fa-solid fa-clock mr-1"></i>
+                                                            {{ $jumlahHari }} Hari
+                                                        </span>
+
+                                                    </div>
 
                                                 </div>
 
                                             </div>
 
-                                        </div>
+                                            <div class="flex flex-col items-end gap-3">
 
-                                        {{-- Harga --}}
-                                        <div class="text-right">
+                                                <div class="text-right">
+                                                    <p class="font-bold text-lg text-slate-900">
+                                                        Rp {{ number_format($subtotal,0,',','.') }}
+                                                    </p>
 
-                                            <p class="font-bold text-lg text-slate-900">
-                                                Rp {{ number_format($subtotal,0,',','.') }}
-                                            </p>
+                                                    <p class="text-xs text-slate-400 mt-1">
+                                                        Rp {{ number_format($item->produk->harga_sewa_per_hari,0,',','.') }}/hari
+                                                    </p>
+                                                </div>
 
-                                            <p class="text-xs text-slate-400 mt-1">
-                                                Rp {{ number_format($item->produk->harga_sewa_per_hari,0,',','.') }}/hari
-                                            </p>
+                                                <form action="{{ route('keranjang.destroy', $item->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Hapus produk dari keranjang?')">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="submit"
+                                                        class="w-9 h-9 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+
+                                            </div>
 
                                         </div>
 
@@ -126,9 +140,7 @@
 
                                 </div>
 
-                            </div>
-
-                            @endforeach
+                                @endforeach
 
                         </div>
 

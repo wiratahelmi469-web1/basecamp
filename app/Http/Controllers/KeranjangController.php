@@ -71,4 +71,14 @@ class KeranjangController extends Controller
             'cart_count' => $cartCount,
         ]);
     }
+
+    public function destroy($id)
+    {
+        $item = Keranjang::where('user_id', auth()->id())
+            ->findOrFail($id);
+
+        $item->delete();
+
+        return back()->with('success', 'Produk berhasil dihapus.');
+    }
 }

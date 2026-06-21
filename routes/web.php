@@ -55,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/keranjang', [KeranjangController::class, 'store'])
         ->name('keranjang.store');
 
+    Route::delete('/keranjang/{id}', [KeranjangController::class, 'destroy'])
+        ->name('keranjang.destroy');
+
     /*
     |--------------------------------------------------------------------------
     | Checkout
